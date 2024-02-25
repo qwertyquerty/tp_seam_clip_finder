@@ -8,8 +8,8 @@ require "Scripts/lua/coordinates"
 
 LOCAL = {
   SEAM_LOCATION = Coordinates:new(6985.00146, -3650.08081),
-  START_COORDINATE_RANGE_MIN = Coordinates:new(6950, -3627),
-  START_COORDINATE_RANGE_MAX = Coordinates:new(6970, -3626),
+  START_COORDINATE_RANGE_MIN = Coordinates:new(6959.3237, -3629.9773),
+  START_COORDINATE_RANGE_MAX = Coordinates:new(6949.3711, -3628.1484),
   SPEED_MIN = 60.0,
   SPEED_MAX = 61.0
 }
@@ -88,10 +88,8 @@ function SetEndPosition:init()
     return Action:new({
       Name = "SetEndPosition",
       Run = function()
-        local angle_rads = Globals.CurrentCoordinates:AngleBetweenCoords(LOCAL.SEAM_LOCATION)
         local speed = RandomFloat(LOCAL.SPEED_MIN, LOCAL.SPEED_MAX)
         WriteActualSpeed(speed)
-        WriteAngle(math.floor(DegreesToHalfword(angle_rads)))
       end,
       IsFinished = function()
         return true
@@ -111,6 +109,10 @@ function SetRandomPosition:init(minCoord, maxCoord)
           WriteActualSpeed(0)
           WriteX(randomStart.X)
           WriteZ(randomStart.Y)
+
+          local angle_rads = GetCurrentCoordinates():AngleBetweenCoords(LOCAL.SEAM_LOCATION)
+          WriteAngle(math.floor(DegreesToHalfword(angle_rads)))
+
         end   
  
       end,
@@ -136,9 +138,9 @@ function SearchForSeam:init()
           RunActionOnce:new(function() LOCAL.SEARCHING = true end),
           SetRandomPosition:new(LOCAL.START_COORDINATE_RANGE_MIN, LOCAL.START_COORDINATE_RANGE_MAX),
           RunActionOnce:new(function() LOCAL.START_POS = GetCurrentCoordinates() end),
-          Wait:new(1),
+          Wait:new(20),
           SetEndPosition:new(),
-          Wait:new(1),
+          Wait:new(10),
           RecordIfClip:new(),    
           RunActionOnce:new(function() LOCAL.SEARCHING = false end)
         }))

@@ -33,6 +33,12 @@ function WriteX(value)
   WriteValueFloat(address, value)
 end
 
+function WriteY(value)
+  local pointer = GetPointerNormal(MEMORY.LINK_POINTER)
+  local address = pointer + MEMORY.Y_POS_OFFSET;
+  WriteValueFloat(address, value)
+end
+
 function WriteZ(value)
   local pointer = GetPointerNormal(MEMORY.LINK_POINTER)
   local address = pointer + MEMORY.Z_POS_OFFSET;
