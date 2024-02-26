@@ -8,10 +8,10 @@ function RadiansToDegrees(rad)
   return rad * (180.0 / math.pi)
 end
 function HalfwordToDegrees(val)
-    return -((val/180) - 90)%360
+    return (val-90) * 0.005493164
 end
 function DegreesToHalfword(val)
-    return -(180 * val) + 16384
+    return 182.04445 * (val+90)
 end
 function RandomFloat(lower, greater)
 	math.randomseed(os.time())

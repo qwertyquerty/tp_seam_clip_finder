@@ -7,9 +7,9 @@ require "Scripts/lua/helpers"
 require "Scripts/lua/coordinates"
 
 LOCAL = {
-  SEAM_LOCATION = Coordinates:new(6985.00146, -3650.08081),
-  START_COORDINATE_RANGE_MIN = Coordinates:new(6959.3237, -3629.9773),
-  START_COORDINATE_RANGE_MAX = Coordinates:new(6949.3711, -3628.1484),
+  SEAM_LOCATION = Coordinates:new(-1608.81091, 9764.84180),
+  START_COORDINATE_RANGE_MIN = Coordinates:new(-1552.0927, 9756.9062),
+  START_COORDINATE_RANGE_MAX = Coordinates:new(-1552.0927, 9756.9062),
   SPEED_MIN = 60.0,
   SPEED_MAX = 61.0
 }
@@ -71,7 +71,7 @@ function RecordIfClip:init()
     return Action:new({
       Name = "RecordIfClip",
       Run = function()  
-        if(LOCAL.START_POS:DistanceBetween(Globals.CurrentCoordinates) >= LOCAL.SPEED_MIN) then
+        if(LOCAL.START_POS:DistanceBetween(GetCurrentCoordinates()) >= LOCAL.SPEED_MIN) then
           Globals.Queue:Add(RecordSolution:new())
         end
       end,
@@ -110,7 +110,7 @@ function SetRandomPosition:init(minCoord, maxCoord)
           WriteX(randomStart.X)
           WriteZ(randomStart.Y)
 
-          local angle_rads = GetCurrentCoordinates():AngleBetweenCoords(LOCAL.SEAM_LOCATION)
+          local angle_rads = GetCurrentCoordinates():AngleBetweenCoords(LOCAL.SEAM_LOCATION) + RandomFloat(-1, 1)
           WriteAngle(math.floor(DegreesToHalfword(angle_rads)))
 
         end   
@@ -138,9 +138,9 @@ function SearchForSeam:init()
           RunActionOnce:new(function() LOCAL.SEARCHING = true end),
           SetRandomPosition:new(LOCAL.START_COORDINATE_RANGE_MIN, LOCAL.START_COORDINATE_RANGE_MAX),
           RunActionOnce:new(function() LOCAL.START_POS = GetCurrentCoordinates() end),
-          Wait:new(20),
+          Wait:new(22),
           SetEndPosition:new(),
-          Wait:new(10),
+          Wait:new(3),
           RecordIfClip:new(),    
           RunActionOnce:new(function() LOCAL.SEARCHING = false end)
         }))
